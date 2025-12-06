@@ -114,3 +114,123 @@ function gameObject() {
         },
     };
 }
+
+
+function allPlayers() {
+  const game = gameObject();
+  let players = {};
+
+  for (let team in game) {
+    Object.assign(players, game[team].players);
+  }
+
+  return players;
+}
+
+function numPointsScored(playerName) {
+  return allPlayers()[playerName].points;
+}
+
+function shoeSize(playerName) {
+  return allPlayers()[playerName].shoe;
+}
+
+function teamColors(teamName) {
+  const game = gameObject();
+
+  for (let team in game) {
+    if (game[team].teamName === teamName) {
+      return game[team].colors;
+    }
+  }
+}
+
+function teamNames() {
+  return Object.values(gameObject()).map(team => team.teamName);
+}
+
+function playerNumbers(teamName) {
+  const game = gameObject();
+
+  for (let team in game) {
+    if (game[team].teamName === teamName) {
+      return Object.values(game[team].players).map(p => p.number);
+    }
+  }
+}
+
+function playerStats(playerName) {
+  return allPlayers()[playerName];
+}
+
+function bigShoeRebounds() {
+  let biggestShoe = 0;
+  let rebounds = 0;
+
+  for (let player in allPlayers()) {
+    if (allPlayers()[player].shoe > biggestShoe) {
+      biggestShoe = allPlayers()[player].shoe;
+      rebounds = allPlayers()[player].rebounds;
+    }
+  }
+
+  return rebounds;
+}
+
+function mostPointsScored() {
+  let max = 0;
+  let topPlayer = "";
+
+  for (let player in allPlayers()) {
+    if (allPlayers()[player].points > max) {
+      max = allPlayers()[player].points;
+      topPlayer = player;
+    }
+  }
+
+  return topPlayer;
+}
+
+function winningTeam() {
+  const game = gameObject();
+  let scores = {};
+
+  for (let team in game) {
+    scores[game[team].teamName] =
+      Object.values(game[team].players)
+        .reduce((sum, p) => sum + p.points, 0);
+  }
+
+  return Object.keys(scores).reduce((a, b) =>
+    scores[a] > scores[b] ? a : b
+  );
+}
+
+function playerWithLongestName() {
+  return Object.keys(allPlayers())
+    .reduce((a, b) => a.length > b.length ? a : b);
+}
+
+function doesLongNameStealATon() {
+  let players = allPlayers();
+  let mostSteals = Math.max(
+    ...Object.values(players).map(p => p.steals)
+  );
+
+  return players[playerWithLongestName()].steals === mostSteals;
+}
+
+module.exports = {
+  gameObject,
+  numPointsScored,
+  shoeSize,
+  teamColors,
+  teamNames,
+  playerNumbers,
+  playerStats,
+  bigShoeRebounds,
+  mostPointsScored,
+  winningTeam,
+  playerWithLongestName,
+  doesLongNameStealATon,
+};
